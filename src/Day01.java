@@ -25,10 +25,8 @@ public class Day01 extends Day {
 
     public static void main(String[] args) {
         Day01 solution = new Day01();
-        long resultPart1 = solution.part1();
-        long resultPart2 = solution.part2();
-        System.out.println("Part 1: " + resultPart1);
-        System.out.println("Part 2: " + resultPart2);
+        System.out.println("Part 1: " + solution.part1());
+        System.out.println("Part 2: " + solution.part2());
     }
 
     void parseInput() {
@@ -39,7 +37,7 @@ public class Day01 extends Day {
         }
     }
 
-    long part1() {
+    public long part1() {
         group1.sort(null);
         group2.sort(null);
         long result = 0;
@@ -49,7 +47,7 @@ public class Day01 extends Day {
         return result;
     }
 
-    long part2() {
+    public long part2() {
         long result = 0;
         for (Integer id : group1) {
             result += (long) id * Collections.frequency(group2, id);

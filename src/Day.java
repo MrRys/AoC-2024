@@ -12,13 +12,15 @@ public abstract class Day {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
 
         this.input = new ArrayList<>();
-        while(reader.ready()) {
+        while (reader.ready()) {
             input.add(reader.readLine());
         }
         reader.close();
     }
 
     abstract void parseInput();
-    abstract long part1();
-    abstract long part2();
+
+    abstract public long part1();
+
+    abstract public long part2();
 }
