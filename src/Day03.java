@@ -40,19 +40,10 @@ public class Day03 extends Day {
 
     public long part2() {
         long result = 0;
-        boolean enabled = true;
-
-        Matcher matcher = Pattern.compile("mul\\(([0-9]+),([0-9]+)\\)|(do\\(\\))|(don't\\(\\))").matcher(this.memory);
+        String doOnlyMemory = this.memory.replaceAll("don't\\(\\).*?do\\(\\)", "").replaceAll("don't\\(\\).*", "");
+        Matcher matcher = Pattern.compile("mul\\(([0-9]+),([0-9]+)\\)").matcher(doOnlyMemory);
         while (matcher.find()) {
-            if (enabled && matcher.group(1) != null && matcher.group(2) != null) {
-                result += Long.parseLong(matcher.group(1)) * Long.parseLong(matcher.group(2));
-            }
-            if (matcher.group(3) != null) {
-                enabled = true;
-            }
-            if (matcher.group(4) != null) {
-                enabled = false;
-            }
+            result += Long.parseLong(matcher.group(1)) * Long.parseLong(matcher.group(2));
         }
         return result;
     }
