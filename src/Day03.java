@@ -29,22 +29,21 @@ public class Day03 extends Day {
         this.memory = String.join("", this.getInput());
     }
 
-    public long part1() {
+    private long executeMulInstructions(String memory) {
         long result = 0;
-        Matcher matcher = Pattern.compile("mul\\(([0-9]+),([0-9]+)\\)").matcher(this.memory);
+        Matcher matcher = Pattern.compile("mul\\(([0-9]+),([0-9]+)\\)").matcher(memory);
         while (matcher.find()) {
             result += Long.parseLong(matcher.group(1)) * Long.parseLong(matcher.group(2));
         }
         return result;
     }
 
+    public long part1() {
+        return executeMulInstructions(this.memory);
+    }
+
     public long part2() {
-        long result = 0;
         String doOnlyMemory = this.memory.replaceAll("don't\\(\\).*?do\\(\\)|don't\\(\\).*", "");
-        Matcher matcher = Pattern.compile("mul\\(([0-9]+),([0-9]+)\\)").matcher(doOnlyMemory);
-        while (matcher.find()) {
-            result += Long.parseLong(matcher.group(1)) * Long.parseLong(matcher.group(2));
-        }
-        return result;
+        return executeMulInstructions(doOnlyMemory);
     }
 }
