@@ -38,11 +38,12 @@ public class Day01 extends Day {
     }
 
     public long part1() {
-        group1.sort(null);
-        group2.sort(null);
+        List<Integer> group1Sorted = group1.stream().sorted().toList();
+        List<Integer> group2Sorted = group2.stream().sorted().toList();
+
         long result = 0;
-        for (int i = 0; i < group1.size(); i++) {
-            result += Math.abs(group1.get(i) - group2.get(i));
+        for (int i = 0; i < group1Sorted.size(); i++) {
+            result += Math.abs(group1Sorted.get(i) - group2Sorted.get(i));
         }
         return result;
     }
