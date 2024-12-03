@@ -6,7 +6,11 @@ import java.util.List;
 
 public abstract class Day {
 
-    List<String> input = null;
+    private List<String> input = null;
+
+    public List<String> getInput() {
+        return input;
+    }
 
     void readFile(String fileName) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));

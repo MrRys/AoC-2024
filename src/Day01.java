@@ -30,7 +30,7 @@ public class Day01 extends Day {
     }
 
     void parseInput() {
-        for (String line : this.input) {
+        for (String line : this.getInput()) {
             String[] parts = line.split(" +");
             group1.add(Integer.parseInt(parts[0]));
             group2.add(Integer.parseInt(parts[1]));
