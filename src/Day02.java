@@ -10,14 +10,12 @@ public class Day02 extends Day {
     private List<List<Integer>> reports;
 
     public Day02() {
-
         try {
             this.readFile(inputFile);
             this.parseInput();
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
-
     }
 
     public static void main(String[] args) {

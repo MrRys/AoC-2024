@@ -8,13 +8,12 @@ public abstract class Day {
 
     private List<String> input = null;
 
-    public List<String> getInput() {
+    List<String> getInput() {
         return input;
     }
 
     void readFile(String fileName) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(fileName));
-
         this.input = new ArrayList<>();
         while (reader.ready()) {
             input.add(reader.readLine());

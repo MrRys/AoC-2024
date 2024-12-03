@@ -5,14 +5,12 @@ public class Day04 extends Day {
     final static private String inputFile = "inputs/day04.txt";
 
     public Day04() {
-
         try {
             this.readFile(inputFile);
             this.parseInput();
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
-
     }
 
     public static void main(String[] args) {

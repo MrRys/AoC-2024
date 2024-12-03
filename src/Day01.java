@@ -20,7 +20,6 @@ public class Day01 extends Day {
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
-
     }
 
     public static void main(String[] args) {

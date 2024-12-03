@@ -9,14 +9,12 @@ public class Day03 extends Day {
     private String memory;
 
     public Day03() {
-
         try {
             this.readFile(inputFile);
             this.parseInput();
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
-
     }
 
     public static void main(String[] args) {
