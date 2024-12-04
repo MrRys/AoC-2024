@@ -26,32 +26,32 @@ public class Day04 extends Day {
         this.grid = this.getInput();
     }
 
-    private long isXmasHorizontal(int row, int col) {
+    private boolean isXmasHorizontal(int row, int col) {
         if (this.grid.get(row).length() - 4 < col) {
-            return 0;
+            return false;
         }
 
         String horizontal = this.grid.get(row);
-        return horizontal.startsWith("XMAS", col) || horizontal.startsWith("SAMX", col) ? 1 : 0;
+        return horizontal.startsWith("XMAS", col) || horizontal.startsWith("SAMX", col);
     }
 
-    private long isXmasVertical(int row, int col) {
+    private boolean isXmasVertical(int row, int col) {
         if (this.grid.size() - 4 < row) {
-            return 0;
+            return false;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = row; i < row + 4; i++) {
-            stringBuilder.append(this.grid.get(i).charAt(col));
+        for (int r = row; r < row + 4; r++) {
+            stringBuilder.append(this.grid.get(r).charAt(col));
         }
 
         String vertical = stringBuilder.toString();
-        return vertical.equals("XMAS") || vertical.equals("SAMX") ? 1 : 0;
+        return vertical.equals("XMAS") || vertical.equals("SAMX");
     }
 
-    private long isXmasPosDiagonal(int row, int col) {
+    private boolean isXmasPosDiagonal(int row, int col) {
         if (this.grid.size() - 4 < row || this.grid.get(row).length() - 4 < col) {
-            return 0;
+            return false;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -60,12 +60,12 @@ public class Day04 extends Day {
         }
 
         String diagonal = stringBuilder.toString();
-        return diagonal.equals("XMAS") || diagonal.equals("SAMX") ? 1 : 0;
+        return diagonal.equals("XMAS") || diagonal.equals("SAMX");
     }
 
-    private long isXmasNegDiagonal(int row, int col) {
+    private boolean isXmasNegDiagonal(int row, int col) {
         if (this.grid.size() - 4 < row || this.grid.get(row).length() - 4 < col) {
-            return 0;
+            return false;
         }
 
         StringBuilder stringBuilder = new StringBuilder();
@@ -73,12 +73,32 @@ public class Day04 extends Day {
             stringBuilder.append(this.grid.get(r).charAt(c));
         }
 
-        String diagonal = stringBuilder.toString();
-        return diagonal.equals("XMAS") || diagonal.equals("SAMX") ? 1 : 0;
+        String posDiagonal = stringBuilder.toString();
+        return posDiagonal.equals("XMAS") || posDiagonal.equals("SAMX");
+    }
+
+    private boolean isX_mas(int row, int col) {
+        if (this.grid.size() - 3 < row || this.grid.get(row).length() - 3 < col) {
+            return false;
+        }
+
+        StringBuilder posBuilder = new StringBuilder();
+        for (int r = row, c = col; r < row + 3; r++, c++) {
+            posBuilder.append(this.grid.get(r).charAt(c));
+        }
+
+        StringBuilder negBuilder = new StringBuilder();
+        for (int r = row, c = col + 2; r < row + 3; r++, c--) {
+            negBuilder.append(this.grid.get(r).charAt(c));
+        }
+
+        String posDiagonal = posBuilder.toString();
+        String negDiagonal = negBuilder.toString();
+        return (posDiagonal.equals("MAS") || posDiagonal.equals("SAM")) && (negDiagonal.equals("MAS") || negDiagonal.equals("SAM"));
     }
 
     private long countXmas(int row, int col) {
-        return isXmasHorizontal(row, col) + isXmasVertical(row, col) + isXmasPosDiagonal(row, col) + isXmasNegDiagonal(row, col);
+        return (isXmasHorizontal(row, col) ? 1 : 0) + (isXmasVertical(row, col) ? 1 : 0) + (isXmasPosDiagonal(row, col) ? 1 : 0) + (isXmasNegDiagonal(row, col) ? 1 : 0);
     }
 
     public long part1() {
@@ -93,25 +113,6 @@ public class Day04 extends Day {
             }
         }
         return result;
-    }
-
-    private boolean isX_mas(int row, int col) {
-        if (this.grid.size() - 3 < row || this.grid.get(row).length() - 3 < col) {
-            return false;
-        }
-
-        StringBuilder posBuilder = new StringBuilder();
-        for (int r = row, c = col; r < row + 3; r++, c++) {
-            posBuilder.append(this.grid.get(r).charAt(c));
-        }
-        StringBuilder negBuilder = new StringBuilder();
-        for (int r = row, c = col + 2; r < row + 3; r++, c--) {
-            negBuilder.append(this.grid.get(r).charAt(c));
-        }
-        String pos = posBuilder.toString();
-        String neg = negBuilder.toString();
-
-        return (pos.equals("MAS") || pos.equals("SAM")) && (neg.equals("MAS") || neg.equals("SAM"));
     }
 
     public long part2() {
