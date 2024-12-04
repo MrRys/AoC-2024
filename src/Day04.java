@@ -59,8 +59,8 @@ public class Day04 extends Day {
             stringBuilder.append(this.grid.get(r).charAt(c));
         }
 
-        String diagonal = stringBuilder.toString();
-        return diagonal.equals("XMAS") || diagonal.equals("SAMX");
+        String posDiagonal = stringBuilder.toString();
+        return posDiagonal.equals("XMAS") || posDiagonal.equals("SAMX");
     }
 
     private boolean isXmasNegDiagonal(int row, int col) {
@@ -73,8 +73,8 @@ public class Day04 extends Day {
             stringBuilder.append(this.grid.get(r).charAt(c));
         }
 
-        String posDiagonal = stringBuilder.toString();
-        return posDiagonal.equals("XMAS") || posDiagonal.equals("SAMX");
+        String negDiagonal = stringBuilder.toString();
+        return negDiagonal.equals("XMAS") || negDiagonal.equals("SAMX");
     }
 
     private boolean isX_mas(int row, int col) {
