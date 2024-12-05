@@ -10,8 +10,8 @@ public class Day03 extends Day {
 
     public Day03() {
         try {
-            this.readFile(inputFile);
-            this.parseInput();
+            readFile(inputFile);
+            parseInput();
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
@@ -24,7 +24,7 @@ public class Day03 extends Day {
     }
 
     void parseInput() {
-        this.memory = String.join("", this.getInput());
+        memory = String.join("", getInput());
     }
 
     private long executeMulInstructions(String memory) {
@@ -37,11 +37,11 @@ public class Day03 extends Day {
     }
 
     public long part1() {
-        return executeMulInstructions(this.memory);
+        return executeMulInstructions(memory);
     }
 
     public long part2() {
-        String doOnlyMemory = this.memory.replaceAll("don't\\(\\).*?do\\(\\)|don't\\(\\).*", "");
+        String doOnlyMemory = memory.replaceAll("don't\\(\\).*?do\\(\\)|don't\\(\\).*", "");
         return executeMulInstructions(doOnlyMemory);
     }
 }

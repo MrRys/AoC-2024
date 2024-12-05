@@ -11,12 +11,12 @@ public class Day01 extends Day {
     private final List<Integer> group2;
 
     public Day01() {
-        this.group1 = new ArrayList<>();
-        this.group2 = new ArrayList<>();
+        group1 = new ArrayList<>();
+        group2 = new ArrayList<>();
 
         try {
-            this.readFile(inputFile);
-            this.parseInput();
+            readFile(inputFile);
+            parseInput();
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
@@ -29,7 +29,7 @@ public class Day01 extends Day {
     }
 
     void parseInput() {
-        for (String line : this.getInput()) {
+        for (String line : getInput()) {
             String[] parts = line.split(" +");
             group1.add(Integer.parseInt(parts[0]));
             group2.add(Integer.parseInt(parts[1]));

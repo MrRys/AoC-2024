@@ -11,8 +11,8 @@ public class Day02 extends Day {
 
     public Day02() {
         try {
-            this.readFile(inputFile);
-            this.parseInput();
+            readFile(inputFile);
+            parseInput();
         } catch (IOException e) {
             System.out.println("Error: Input file not found.");
         }
@@ -25,7 +25,7 @@ public class Day02 extends Day {
     }
 
     void parseInput() {
-        this.reports = this.getInput().stream()
+        reports = getInput().stream()
                 .map(line -> Stream.of(line.split(" "))
                         .map(Integer::parseInt)
                         .toList())
@@ -58,7 +58,7 @@ public class Day02 extends Day {
 
     public long part1() {
         long result = 0;
-        for (List<Integer> report : this.reports) {
+        for (List<Integer> report : reports) {
             result += isSafe(report) ? 1 : 0;
         }
         return result;
@@ -66,7 +66,7 @@ public class Day02 extends Day {
 
     public long part2() {
         long result = 0;
-        for (List<Integer> report : this.reports) {
+        for (List<Integer> report : reports) {
             for (int i = 0; i < report.size(); i++) {
                 if (isSafe(Stream.of(report.subList(0, i), report.subList(i + 1, report.size())).flatMap(Collection::stream).toList())) {
                     result++;
