@@ -68,8 +68,12 @@ public class Day05 extends Day {
     private boolean isCorrectOrder(List<Integer> update) {
         Set<Integer> seen = new HashSet<>();
         for (Integer page : update) {
-            if ((afterMap.containsKey(page) && !afterMap.get(page).containsAll(seen)) ||
-                    (beforeMap.containsKey(page) && !Collections.disjoint(beforeMap.get(page), seen))) {
+            /*
+             * This assumes that all pages have fully defined order in the rule set.
+             * Note: They do in the AoC provided inputs.
+             * */
+            if ((beforeMap.containsKey(page) && !Collections.disjoint(beforeMap.get(page), seen)) ||
+                    (afterMap.containsKey(page) && !afterMap.get(page).containsAll(seen))) {
                 return false;
             }
             seen.add(page);
