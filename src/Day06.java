@@ -1,6 +1,4 @@
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Stream;
 
 public class Day06 extends Day {
 

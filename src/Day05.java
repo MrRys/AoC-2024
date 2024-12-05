@@ -10,7 +10,6 @@ public class Day05 extends Day {
     private final Map<Integer, Set<Integer>> afterMap;
     private final List<List<Integer>> updates;
 
-
     public Day05() {
         beforeMap = new HashMap<>();
         afterMap = new HashMap<>();
