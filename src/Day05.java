@@ -98,6 +98,11 @@ public class Day05 extends Day {
         for (List<Integer> update : updates) {
             if (!isCorrectOrder(update)) {
                 List<Integer> updateCopy = new ArrayList<>(update);
+
+                /*
+                 * This assumes that all pages have fully defined order in the rule set.
+                 * Note: They do in the AoC provided inputs.
+                 * */
                 updateCopy.sort((a, b) -> {
                     if (beforeMap.containsKey(a) && beforeMap.get(a).contains(b)) {
                         return -1;
