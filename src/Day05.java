@@ -103,7 +103,7 @@ public class Day05 extends Day {
                     }
                     return 0;
                 });
-                result += updateCopy.get(update.size() / 2);
+                result += updateCopy.get(updateCopy.size() / 2);
             }
         }
         return result;
