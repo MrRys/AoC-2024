@@ -57,7 +57,6 @@ public class Day05 extends Day {
                     set.add(parts[0]);
                     afterMap.put(parts[1], set);
                 }
-
             } else {
                 List<Integer> update = Stream.of(line.split(",")).map(Integer::valueOf).toList();
                 updates.add(update);
@@ -98,6 +97,11 @@ public class Day05 extends Day {
         for (List<Integer> update : updates) {
             if (!isCorrectOrder(update)) {
                 List<Integer> updateCopy = new ArrayList<>(update);
+
+                /*
+                 * This assumes that all pages have fully defined order in the rule set.
+                 * Note: They do in the AoC provided inputs.
+                 * */
                 updateCopy.sort((a, b) -> {
                     if (beforeMap.containsKey(a) && beforeMap.get(a).contains(b)) {
                         return -1;
