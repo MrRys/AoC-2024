@@ -42,7 +42,7 @@ public class Day06 extends Day {
         }
     }
 
-    void resetGrid() {
+    private void resetGrid() {
         workGrid = Arrays.stream(initGrid).map(char[]::clone).toArray(char[][]::new);
         guardPos = initGuardPos.clone();
         guardDir = initGrid[initGuardPos[0]][initGuardPos[1]];
@@ -127,27 +127,27 @@ public class Day06 extends Day {
     }
 
     public long part1() {
-        long result = 0;
-
         resetGrid();
+
+        long result = setWalkedTile();
 
         while (isInGrid()) {
             if (canMove()) {
-                result += setWalkedTile();
                 moveGuard();
+                result += setWalkedTile();
                 continue;
             }
 
             changeGuardDirection();
         }
 
-        return result + setWalkedTile();
+        return result;
     }
 
     public long part2() {
-        long result = 0;
-
         resetGrid();
+
+        long result = 0;
 
         for (int row = 0; row < workGrid.length; row++) {
             for (int col = 0; col < workGrid[0].length; col++) {
