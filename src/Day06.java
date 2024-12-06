@@ -3,27 +3,13 @@ import java.util.*;
 
 public class Day06 extends Day {
 
-    private static class MoveDirection {
-        int dRow;
-        int dCol;
-
-        MoveDirection(int dRow, int dCol) {
-            this.dRow = dRow;
-            this.dCol = dCol;
-        }
-    }
-
     final static private String inputFile = "inputs/day06.txt";
-
     private char[][] initGrid;
     private int[] initGuardPos;
-
     private char[][] workGrid;
     private int[] guardPos;
     private char guardDir;
     private Map<Integer, Set<Character>> dirGrid;
-
-
     public Day06() {
         try {
             readFile(inputFile);
@@ -66,11 +52,21 @@ public class Day06 extends Day {
 
     private MoveDirection getMoveDirection() {
         switch (guardDir) {
-            case '^' -> {return new MoveDirection(-1, 0);}
-            case '>' -> {return new MoveDirection(0, 1);}
-            case 'v' -> {return new MoveDirection(1, 0);}
-            case '<' -> {return new MoveDirection(0, -1);}
-            default -> {return new MoveDirection(0, 0);}
+            case '^' -> {
+                return new MoveDirection(-1, 0);
+            }
+            case '>' -> {
+                return new MoveDirection(0, 1);
+            }
+            case 'v' -> {
+                return new MoveDirection(1, 0);
+            }
+            case '<' -> {
+                return new MoveDirection(0, -1);
+            }
+            default -> {
+                return new MoveDirection(0, 0);
+            }
         }
     }
 
@@ -80,8 +76,24 @@ public class Day06 extends Day {
             case '>' -> guardDir = 'v';
             case 'v' -> guardDir = '<';
             case '<' -> guardDir = '^';
-            default -> {}
+            default -> {
+            }
         }
+    }
+
+    private boolean isNewDirection() {
+        int pos = guardPos[0] * workGrid[0].length + guardPos[1];
+
+        if (dirGrid.containsKey(pos) && dirGrid.get(pos).contains(guardDir)) {
+            return false;
+        }
+
+        if (!dirGrid.containsKey(pos)) {
+            dirGrid.put(pos, new HashSet<>());
+        }
+
+        dirGrid.get(pos).add(guardDir);
+        return true;
     }
 
     private boolean canMove() {
@@ -97,12 +109,10 @@ public class Day06 extends Day {
         return row != 0 && col != 0 && row != workGrid.length - 1 && col != workGrid[0].length - 1;
     }
 
-    private long moveGuard() {
+    private void moveGuard() {
         MoveDirection mDir = getMoveDirection();
-        long result = setWalkedTile();
         guardPos[0] += mDir.dRow;
         guardPos[1] += mDir.dCol;
-        return result;
     }
 
     private long setWalkedTile() {
@@ -120,28 +130,15 @@ public class Day06 extends Day {
 
         while (isInGrid()) {
             if (canMove()) {
-                result += moveGuard();
-            } else if(isInGrid()) {
-                changeGuardDirection();
+                result += setWalkedTile();
+                moveGuard();
+                continue;
             }
+
+            changeGuardDirection();
         }
 
         return result + setWalkedTile();
-    }
-
-    private boolean isNewDirection() {
-        int pos = guardPos[0] * workGrid[0].length + guardPos[1];
-
-        if (dirGrid.containsKey(pos) && dirGrid.get(pos).contains(guardDir)) {
-            return false;
-        }
-
-        if (!dirGrid.containsKey(pos)) {
-            dirGrid.put(pos, new HashSet<>());
-        }
-
-        dirGrid.get(pos).add(guardDir);
-        return true;
     }
 
     public long part2() {
@@ -161,12 +158,13 @@ public class Day06 extends Day {
                 while (isInGrid()) {
                     if (canMove()) {
                         moveGuard();
-                    } else if(isInGrid()) {
-                        changeGuardDirection();
-                        if (!isNewDirection()) {
-                            result++;
-                            break;
-                        }
+                        continue;
+                    }
+
+                    changeGuardDirection();
+                    if (!isNewDirection()) {
+                        result++;
+                        break;
                     }
                 }
                 resetGrid();
@@ -174,5 +172,15 @@ public class Day06 extends Day {
         }
 
         return result;
+    }
+
+    private static class MoveDirection {
+        int dRow;
+        int dCol;
+
+        MoveDirection(int dRow, int dCol) {
+            this.dRow = dRow;
+            this.dCol = dCol;
+        }
     }
 }
