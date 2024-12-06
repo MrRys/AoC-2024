@@ -154,14 +154,18 @@ public class Day06 extends Day {
     }
 
     public long part2() {
-        resetGrid();
+        if (workGrid == null) {
+            part1();
+        }
+        char[][] walkedGrid = Arrays.stream(workGrid).map(char[]::clone).toArray(char[][]::new);
 
+        resetGrid();
         long result = 0;
 
-        for (int row = 0; row < workGrid.length; row++) {
-            for (int col = 0; col < workGrid[0].length; col++) {
+        for (int row = 0; row < walkedGrid.length; row++) {
+            for (int col = 0; col < walkedGrid[0].length; col++) {
 
-                if (workGrid[row][col] != EMPTY) {
+                if (walkedGrid[row][col] != WALKED) {
                     continue;
                 }
 
