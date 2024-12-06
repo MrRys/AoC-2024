@@ -4,12 +4,15 @@ import java.util.*;
 public class Day06 extends Day {
 
     final static private String inputFile = "inputs/day06.txt";
+
     private char[][] initGrid;
     private int[] initGuardPos;
+
     private char[][] workGrid;
     private int[] guardPos;
     private char guardDir;
     private Map<Integer, Set<Character>> dirGrid;
+
     public Day06() {
         try {
             readFile(inputFile);
