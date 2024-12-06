@@ -97,12 +97,10 @@ public class Day06 extends Day {
         return row != 0 && col != 0 && row != workGrid.length - 1 && col != workGrid[0].length - 1;
     }
 
-    private long moveGuard() {
+    private void moveGuard() {
         MoveDirection mDir = getMoveDirection();
-        long result = setWalkedTile();
         guardPos[0] += mDir.dRow;
         guardPos[1] += mDir.dCol;
-        return result;
     }
 
     private long setWalkedTile() {
@@ -120,10 +118,12 @@ public class Day06 extends Day {
 
         while (isInGrid()) {
             if (canMove()) {
-                result += moveGuard();
-            } else if(isInGrid()) {
-                changeGuardDirection();
+                result += setWalkedTile();
+                moveGuard();
+                continue;
             }
+
+            changeGuardDirection();
         }
 
         return result + setWalkedTile();
@@ -161,12 +161,13 @@ public class Day06 extends Day {
                 while (isInGrid()) {
                     if (canMove()) {
                         moveGuard();
-                    } else if(isInGrid()) {
-                        changeGuardDirection();
-                        if (!isNewDirection()) {
-                            result++;
-                            break;
-                        }
+                        continue;
+                    }
+
+                    changeGuardDirection();
+                    if (!isNewDirection()) {
+                        result++;
+                        break;
                     }
                 }
                 resetGrid();
