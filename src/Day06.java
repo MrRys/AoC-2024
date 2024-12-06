@@ -5,6 +5,15 @@ public class Day06 extends Day {
 
     final static private String inputFile = "inputs/day06.txt";
 
+    final private char EMPTY = '.';
+    final private char BLOCKED = '#';
+    final private char WALKED = 'X';
+    
+    final private char UP = '^';
+    final private char RIGHT = '>';
+    final private char DOWN = 'v';
+    final private char LEFT = '<';
+    
     private char[][] initGrid;
     private int[] initGuardPos;
 
@@ -33,7 +42,7 @@ public class Day06 extends Day {
         initGuardPos = new int[2];
         for (int row = 0; row < initGrid.length; row++) {
             for (int col = 0; col < initGrid[0].length; col++) {
-                if (initGrid[row][col] != '.' && initGrid[row][col] != '#') {
+                if (initGrid[row][col] != EMPTY && initGrid[row][col] != BLOCKED) {
                     initGuardPos[0] = row;
                     initGuardPos[1] = col;
                     break;
@@ -55,16 +64,16 @@ public class Day06 extends Day {
 
     private MoveDirection getMoveDirection() {
         switch (guardDir) {
-            case '^' -> {
+            case UP -> {
                 return new MoveDirection(-1, 0);
             }
-            case '>' -> {
+            case RIGHT -> {
                 return new MoveDirection(0, 1);
             }
-            case 'v' -> {
+            case DOWN -> {
                 return new MoveDirection(1, 0);
             }
-            case '<' -> {
+            case LEFT -> {
                 return new MoveDirection(0, -1);
             }
             default -> {
@@ -75,10 +84,10 @@ public class Day06 extends Day {
 
     private void changeGuardDirection() {
         switch (guardDir) {
-            case '^' -> guardDir = '>';
-            case '>' -> guardDir = 'v';
-            case 'v' -> guardDir = '<';
-            case '<' -> guardDir = '^';
+            case UP -> guardDir = RIGHT;
+            case RIGHT -> guardDir = DOWN;
+            case DOWN -> guardDir = LEFT;
+            case LEFT -> guardDir = UP;
             default -> {
             }
         }
@@ -103,7 +112,7 @@ public class Day06 extends Day {
         MoveDirection mDir = getMoveDirection();
         int newRow = guardPos[0] + mDir.dRow;
         int newCol = guardPos[1] + mDir.dCol;
-        return newRow >= 0 && newRow < workGrid.length && newCol >= 0 && newCol < workGrid[newRow].length && workGrid[newRow][newCol] != '#';
+        return newRow >= 0 && newRow < workGrid.length && newCol >= 0 && newCol < workGrid[newRow].length && workGrid[newRow][newCol] != BLOCKED;
     }
 
     private boolean isInGrid() {
@@ -119,8 +128,8 @@ public class Day06 extends Day {
     }
 
     private long setWalkedTile() {
-        if (workGrid[guardPos[0]][guardPos[1]] != 'X') {
-            workGrid[guardPos[0]][guardPos[1]] = 'X';
+        if (workGrid[guardPos[0]][guardPos[1]] != WALKED) {
+            workGrid[guardPos[0]][guardPos[1]] = WALKED;
             return 1;
         }
         return 0;
@@ -152,11 +161,11 @@ public class Day06 extends Day {
         for (int row = 0; row < workGrid.length; row++) {
             for (int col = 0; col < workGrid[0].length; col++) {
 
-                if (workGrid[row][col] != '.') {
+                if (workGrid[row][col] != EMPTY) {
                     continue;
                 }
 
-                workGrid[row][col] = '#';
+                workGrid[row][col] = BLOCKED;
 
                 while (isInGrid()) {
                     if (canMove()) {
