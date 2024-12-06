@@ -24,8 +24,10 @@ public class Day01 extends Day {
 
     public static void main(String[] args) {
         Day01 solution = new Day01();
+        double time = System.currentTimeMillis();
         System.out.println("Part 1: " + solution.part1());
         System.out.println("Part 2: " + solution.part2());
+        System.out.println("Time: " + (System.currentTimeMillis() - time) / 1000 + "s");
     }
 
     void parseInput() {
