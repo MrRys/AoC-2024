@@ -21,6 +21,7 @@ public class Day06 extends Day {
     private int[] guardPos;
     private char guardDir;
     private Map<Integer, Set<Character>> dirGrid;
+    private Set<Integer> walkedPath;
 
     public Day06() {
         try {
@@ -49,6 +50,7 @@ public class Day06 extends Day {
                 }
             }
         }
+        walkedPath = new HashSet<>();
     }
 
     private void resetGrid() {
@@ -127,64 +129,56 @@ public class Day06 extends Day {
         guardPos[1] += mDir.dCol;
     }
 
-    private long setWalkedTile() {
-        if (workGrid[guardPos[0]][guardPos[1]] != WALKED) {
-            workGrid[guardPos[0]][guardPos[1]] = WALKED;
-            return 1;
-        }
-        return 0;
+    private void setWalkedTile() {
+        workGrid[guardPos[0]][guardPos[1]] = WALKED;
+        walkedPath.add(guardPos[0] * initGrid.length + guardPos[1]);
     }
 
     public long part1() {
         resetGrid();
-
-        long result = setWalkedTile();
+        setWalkedTile();
 
         while (isInGrid()) {
             if (canMove()) {
                 moveGuard();
-                result += setWalkedTile();
+                setWalkedTile();
                 continue;
             }
 
             changeGuardDirection();
         }
 
-        return result;
+        return walkedPath.size();
     }
 
     public long part2() {
-        if (workGrid == null) {
+        resetGrid();
+
+        if (walkedPath.isEmpty()) {
             part1();
         }
-        char[][] walkedGrid = Arrays.stream(workGrid).map(char[]::clone).toArray(char[][]::new);
 
-        resetGrid();
         long result = 0;
 
-        for (int row = 0; row < walkedGrid.length; row++) {
-            for (int col = 0; col < walkedGrid[0].length; col++) {
+        for (Integer position : walkedPath) {
+            int row = position / workGrid.length;
+            int col = position % workGrid.length;
 
-                if (walkedGrid[row][col] != WALKED) {
+            workGrid[row][col] = BLOCKED;
+
+            while (isInGrid()) {
+                if (canMove()) {
+                    moveGuard();
                     continue;
                 }
 
-                workGrid[row][col] = BLOCKED;
-
-                while (isInGrid()) {
-                    if (canMove()) {
-                        moveGuard();
-                        continue;
-                    }
-
-                    changeGuardDirection();
-                    if (!isNewDirection()) {
-                        result++;
-                        break;
-                    }
+                changeGuardDirection();
+                if (!isNewDirection()) {
+                    result++;
+                    break;
                 }
-                resetGrid();
             }
+            resetGrid();
         }
 
         return result;
