@@ -8,12 +8,12 @@ public class Day06 extends Day {
     final private char EMPTY = '.';
     final private char BLOCKED = '#';
     final private char WALKED = 'X';
-    
+
     final private char UP = '^';
     final private char RIGHT = '>';
     final private char DOWN = 'v';
     final private char LEFT = '<';
-    
+
     private char[][] initGrid;
     private int[] initGuardPos;
 
