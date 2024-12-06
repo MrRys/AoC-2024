@@ -160,13 +160,10 @@ public class Day06 extends Day {
 
         long result = 0;
 
+        walkedPath.remove(guardPos[0] * initGrid[0].length + guardPos[1]);
         for (Integer position : walkedPath) {
             int row = position / workGrid.length;
             int col = position % workGrid.length;
-
-            if (initGuardPos[0] == row && initGuardPos[1] == col) {
-                continue;
-            }
 
             workGrid[row][col] = BLOCKED;
 
