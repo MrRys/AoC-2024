@@ -31,15 +31,15 @@ public class Day07 extends Day {
                 .toList();
     }
 
-    long add(long valueA, long valueB) {
+    private long add(long valueA, long valueB) {
         return valueA + valueB;
     }
 
-    long mul(long valueA, long valueB) {
+    private long mul(long valueA, long valueB) {
         return valueA * valueB;
     }
 
-    long concat(long valueA, long valueB) {
+    private long concat(long valueA, long valueB) {
         long length = (long) (Math.log10(valueB) + 1);
         return valueA * (long) Math.pow(10, length) + valueB;
     }
