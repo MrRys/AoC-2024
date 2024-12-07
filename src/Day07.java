@@ -48,44 +48,44 @@ public class Day07 extends Day {
         return valueA * (long) Math.pow(10, length) + valueB;
     }
 
-    private long isComputablePart1(long currValue, long result, Long[] equation, int index) {
+    private boolean isComputablePart1(long currValue, long result, Long[] equation, int index) {
         if (currValue == result) {
-            return result;
+            return true;
         }
 
         if (currValue > result || index >= equation.length) {
-            return 0;
+            return false;
         }
 
         long nextValue = equation[index];
         return isComputablePart1(add(currValue, nextValue), result, equation, index + 1)
-                + isComputablePart1(mul(currValue, nextValue), result, equation, index + 1);
+                || isComputablePart1(mul(currValue, nextValue), result, equation, index + 1);
     }
 
-    private long isComputablePart2(long currValue, long result, Long[] equation, int index) {
+    private boolean isComputablePart2(long currValue, long result, Long[] equation, int index) {
         if (currValue == result) {
-            return result;
+            return true;
         }
 
         if (currValue > result || index >= equation.length) {
-            return 0;
+            return false;
         }
 
         long nextValue = equation[index];
         return isComputablePart2(add(currValue, nextValue), result, equation, index + 1)
-                + isComputablePart2(mul(currValue, nextValue), result, equation, index + 1)
-                + isComputablePart2(concat(currValue, nextValue), result, equation, index + 1);
+                || isComputablePart2(mul(currValue, nextValue), result, equation, index + 1)
+                || isComputablePart2(concat(currValue, nextValue), result, equation, index + 1);
     }
 
     public long part1() {
         return equations.parallelStream().mapToLong(equation ->
-                isComputablePart1(equation[1], equation[0], equation, 2)
+                isComputablePart1(equation[1], equation[0], equation, 2) ? equation[0] : 0
         ).sum();
     }
 
     public long part2() {
         return equations.parallelStream().mapToLong(equation ->
-                isComputablePart2(equation[1], equation[0], equation, 2)
+                isComputablePart2(equation[1], equation[0], equation, 2) ? equation[0] : 0
         ).sum();
     }
 }
