@@ -1,5 +1,7 @@
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class Day07 extends Day {
 
@@ -20,14 +22,16 @@ public class Day07 extends Day {
         Day07 solution = new Day07();
         double time = System.currentTimeMillis();
         System.out.println("Part 1: " + solution.part1());
+        System.out.println("Time: " + (System.currentTimeMillis() - time) / 1000 + "s");
+        time = System.currentTimeMillis();
         System.out.println("Part 2: " + solution.part2());
         System.out.println("Time: " + (System.currentTimeMillis() - time) / 1000 + "s");
     }
 
     void parseInput() {
-        equations = getInput().stream()
-                .map(line -> Arrays.stream(line.replace(":", "").split(" "))
-                        .map(Long::parseLong).toArray(Long[]::new))
+        equations = getInput().parallelStream().map(
+                line -> Arrays.stream(line.replace(":", "").split(" "))
+                        .parallel().map(Long::parseLong).toArray(Long[]::new))
                 .toList();
     }
 
@@ -74,22 +78,22 @@ public class Day07 extends Day {
     }
 
     public long part1() {
-        long result = 0;
-        for (Long[] equation : equations) {
+        AtomicLong result = new AtomicLong();
+        equations.parallelStream().forEach(equation -> {
             if (isComputablePart1(equation[1], equation[0], equation, 2)) {
-                result += equation[0];
+                result.addAndGet(equation[0]);
             }
-        }
-        return result;
+        });
+        return result.get();
     }
 
     public long part2() {
-        long result = 0;
-        for (Long[] equation : equations) {
+        AtomicLong result = new AtomicLong();
+        equations.parallelStream().forEach(equation -> {
             if (isComputablePart2(equation[1], equation[0], equation, 2)) {
-                result += equation[0];
+                result.addAndGet(equation[0]);
             }
-        }
-        return result;
+        });
+        return result.get();
     }
 }
