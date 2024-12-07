@@ -48,52 +48,44 @@ public class Day07 extends Day {
         return valueA * (long) Math.pow(10, length) + valueB;
     }
 
-    private boolean isComputablePart1(long currValue, long result, Long[] equation, int index) {
+    private long isComputablePart1(long currValue, long result, Long[] equation, int index) {
         if (currValue == result) {
-            return true;
+            return result;
         }
 
         if (currValue > result || index >= equation.length) {
-            return false;
+            return 0;
         }
 
         long nextValue = equation[index];
         return isComputablePart1(add(currValue, nextValue), result, equation, index + 1)
-                || isComputablePart1(mul(currValue, nextValue), result, equation, index + 1);
+                + isComputablePart1(mul(currValue, nextValue), result, equation, index + 1);
     }
 
-    private boolean isComputablePart2(long currValue, long result, Long[] equation, int index) {
+    private long isComputablePart2(long currValue, long result, Long[] equation, int index) {
         if (currValue == result) {
-            return true;
+            return result;
         }
 
         if (currValue > result || index >= equation.length) {
-            return false;
+            return 0;
         }
 
         long nextValue = equation[index];
         return isComputablePart2(add(currValue, nextValue), result, equation, index + 1)
-                || isComputablePart2(mul(currValue, nextValue), result, equation, index + 1)
-                || isComputablePart2(concat(currValue, nextValue), result, equation, index + 1);
+                + isComputablePart2(mul(currValue, nextValue), result, equation, index + 1)
+                + isComputablePart2(concat(currValue, nextValue), result, equation, index + 1);
     }
 
     public long part1() {
-        AtomicLong result = new AtomicLong();
-        equations.parallelStream().forEach(equation -> {
-            if (isComputablePart1(equation[1], equation[0], equation, 2)) {
-                result.addAndGet(equation[0]);
-            }
-        });
-        return result.get();
+        return equations.parallelStream().mapToLong(equation ->
+                isComputablePart1(equation[1], equation[0], equation, 2)
+        ).sum();
     }
 
     public long part2() {
-        AtomicLong result = new AtomicLong();
-        equations.parallelStream().forEach(equation -> {
-            if (isComputablePart2(equation[1], equation[0], equation, 2)) {
-                result.addAndGet(equation[0]);
-            }
-        });
-        return result.get();
+        return equations.parallelStream().mapToLong(equation ->
+                isComputablePart2(equation[1], equation[0], equation, 2)
+        ).sum();
     }
 }
