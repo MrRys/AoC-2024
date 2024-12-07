@@ -33,7 +33,7 @@ public class Day07 extends Day {
                 .toList();
     }
 
-    private boolean isComputablePart1(ComputeTree node, Long result, List<Long> equation, int index) {
+    private boolean isComputablePart1(ComputeNode node, Long result, List<Long> equation, int index) {
         if (Objects.equals(node.value, result)) {
             return true;
         }
@@ -46,7 +46,7 @@ public class Day07 extends Day {
                 || isComputablePart1(node.mul(equation.get(index)), result, equation, index + 1);
     }
 
-    private boolean isComputablePart2(ComputeTree node, Long result, List<Long> equation, int index) {
+    private boolean isComputablePart2(ComputeNode node, Long result, List<Long> equation, int index) {
         if (Objects.equals(node.value, result)) {
             return true;
         }
@@ -63,7 +63,7 @@ public class Day07 extends Day {
     public long part1() {
         long result = 0;
         for (List<Long> equation : equations) {
-            ComputeTree root = new ComputeTree(equation.get(1));
+            ComputeNode root = new ComputeNode(equation.get(1));
             if (isComputablePart1(root, equation.getFirst(), equation, 2)) {
                 result += equation.getFirst();
             }
@@ -74,7 +74,7 @@ public class Day07 extends Day {
     public long part2() {
         long result = 0;
         for (List<Long> equation : equations) {
-            ComputeTree root = new ComputeTree(equation.get(1));
+            ComputeNode root = new ComputeNode(equation.get(1));
             if (isComputablePart2(root, equation.getFirst(), equation, 2)) {
                 result += equation.getFirst();
             }
@@ -82,24 +82,24 @@ public class Day07 extends Day {
         return result;
     }
 
-    private static class ComputeTree {
+    private static class ComputeNode {
         Long value;
 
-        ComputeTree(Long value) {
+        ComputeNode(Long value) {
             this.value = value;
         }
 
-        ComputeTree add(Long value) {
-            return new ComputeTree(this.value + value);
+        ComputeNode add(Long value) {
+            return new ComputeNode(this.value + value);
         }
 
-        ComputeTree mul(Long value) {
-            return new ComputeTree(this.value * value);
+        ComputeNode mul(Long value) {
+            return new ComputeNode(this.value * value);
         }
 
-        ComputeTree concat(Long value) {
-            int length = (int) (Math.log10(value) + 1);
-            return new ComputeTree(this.value * (long) Math.pow(10, length) + value);
+        ComputeNode concat(Long value) {
+            long length = (long) (Math.log10(value) + 1);
+            return new ComputeNode(this.value * (long) Math.pow(10, length) + value);
         }
     }
 }
