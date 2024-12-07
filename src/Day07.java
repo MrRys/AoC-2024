@@ -1,8 +1,13 @@
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
 public class Day07 extends Day {
 
     final static private String inputFile = "inputs/day07.txt";
+
+    private List<List<Long>> equations;
 
     public Day07() {
         try {
@@ -22,15 +27,79 @@ public class Day07 extends Day {
     }
 
     void parseInput() {
+        equations = getInput().stream()
+                .map(line -> Arrays.stream(line.replace(":", "").split(" "))
+                        .map(Long::parseLong).toList())
+                .toList();
+    }
+
+    private boolean isComputablePart1(ComputeTree node, Long result, List<Long> equation, int index) {
+        if (Objects.equals(node.value, result)) {
+            return true;
+        }
+
+        if (node.value > result || index >= equation.size()) {
+            return false;
+        }
+
+        return isComputablePart1(node.add(equation.get(index)), result, equation, index + 1)
+                || isComputablePart1(node.mul(equation.get(index)), result, equation, index + 1);
+    }
+
+    private boolean isComputablePart2(ComputeTree node, Long result, List<Long> equation, int index) {
+        if (Objects.equals(node.value, result)) {
+            return true;
+        }
+
+        if (node.value > result || index >= equation.size()) {
+            return false;
+        }
+
+        return isComputablePart2(node.add(equation.get(index)), result, equation, index + 1)
+                || isComputablePart2(node.mul(equation.get(index)), result, equation, index + 1)
+                || isComputablePart2(node.concat(equation.get(index)), result, equation, index + 1);
     }
 
     public long part1() {
         long result = 0;
+        for (List<Long> equation : equations) {
+            ComputeTree root = new ComputeTree(equation.get(1));
+            if (isComputablePart1(root, equation.getFirst(), equation, 2)) {
+                result += equation.getFirst();
+            }
+        }
         return result;
     }
 
     public long part2() {
         long result = 0;
+        for (List<Long> equation : equations) {
+            ComputeTree root = new ComputeTree(equation.get(1));
+            if (isComputablePart2(root, equation.getFirst(), equation, 2)) {
+                result += equation.getFirst();
+            }
+        }
         return result;
+    }
+
+    private static class ComputeTree {
+        Long value;
+
+        ComputeTree(Long value) {
+            this.value = value;
+        }
+
+        ComputeTree add(Long value) {
+            return new ComputeTree(this.value + value);
+        }
+
+        ComputeTree mul(Long value) {
+            return new ComputeTree(this.value * value);
+        }
+
+        ComputeTree concat(Long value) {
+            int length = (int) (Math.log10(value) + 1);
+            return new ComputeTree(this.value * (long) Math.pow(10, length) + value);
+        }
     }
 }
