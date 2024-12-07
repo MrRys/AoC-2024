@@ -1,13 +1,11 @@
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Day07 extends Day {
 
     final static private String inputFile = "inputs/day07.txt";
 
-    private List<List<Long>> equations;
+    private List<Long[]> equations;
 
     public Day07() {
         try {
@@ -29,43 +27,57 @@ public class Day07 extends Day {
     void parseInput() {
         equations = getInput().stream()
                 .map(line -> Arrays.stream(line.replace(":", "").split(" "))
-                        .map(Long::parseLong).toList())
+                        .map(Long::parseLong).toArray(Long[]::new))
                 .toList();
     }
 
-    private boolean isComputablePart1(ComputeNode node, Long result, List<Long> equation, int index) {
-        if (Objects.equals(node.value, result)) {
-            return true;
-        }
-
-        if (node.value > result || index >= equation.size()) {
-            return false;
-        }
-
-        return isComputablePart1(node.add(equation.get(index)), result, equation, index + 1)
-                || isComputablePart1(node.mul(equation.get(index)), result, equation, index + 1);
+    long add(long valueA, long valueB) {
+        return valueA + valueB;
     }
 
-    private boolean isComputablePart2(ComputeNode node, Long result, List<Long> equation, int index) {
-        if (Objects.equals(node.value, result)) {
+    long mul(long valueA, long valueB) {
+        return valueA * valueB;
+    }
+
+    long concat(long valueA, long valueB) {
+        long length = (long) (Math.log10(valueB) + 1);
+        return valueA * (long) Math.pow(10, length) + valueB;
+    }
+
+    private boolean isComputablePart1(long currValue, long result, Long[] equation, int index) {
+        if (currValue == result) {
             return true;
         }
 
-        if (node.value > result || index >= equation.size()) {
+        if (currValue > result || index >= equation.length) {
             return false;
         }
 
-        return isComputablePart2(node.add(equation.get(index)), result, equation, index + 1)
-                || isComputablePart2(node.mul(equation.get(index)), result, equation, index + 1)
-                || isComputablePart2(node.concat(equation.get(index)), result, equation, index + 1);
+        long nextValue = equation[index];
+        return isComputablePart1(add(currValue, nextValue), result, equation, index + 1)
+                || isComputablePart1(mul(currValue, nextValue), result, equation, index + 1);
+    }
+
+    private boolean isComputablePart2(long currValue, long result, Long[] equation, int index) {
+        if (currValue == result) {
+            return true;
+        }
+
+        if (currValue > result || index >= equation.length) {
+            return false;
+        }
+
+        long nextValue = equation[index];
+        return isComputablePart2(add(currValue, nextValue), result, equation, index + 1)
+                || isComputablePart2(mul(currValue, nextValue), result, equation, index + 1)
+                || isComputablePart2(concat(currValue, nextValue), result, equation, index + 1);
     }
 
     public long part1() {
         long result = 0;
-        for (List<Long> equation : equations) {
-            ComputeNode root = new ComputeNode(equation.get(1));
-            if (isComputablePart1(root, equation.getFirst(), equation, 2)) {
-                result += equation.getFirst();
+        for (Long[] equation : equations) {
+            if (isComputablePart1(equation[1], equation[0], equation, 2)) {
+                result += equation[0];
             }
         }
         return result;
@@ -73,33 +85,11 @@ public class Day07 extends Day {
 
     public long part2() {
         long result = 0;
-        for (List<Long> equation : equations) {
-            ComputeNode root = new ComputeNode(equation.get(1));
-            if (isComputablePart2(root, equation.getFirst(), equation, 2)) {
-                result += equation.getFirst();
+        for (Long[] equation : equations) {
+            if (isComputablePart2(equation[1], equation[0], equation, 2)) {
+                result += equation[0];
             }
         }
         return result;
-    }
-
-    private static class ComputeNode {
-        Long value;
-
-        ComputeNode(Long value) {
-            this.value = value;
-        }
-
-        ComputeNode add(Long value) {
-            return new ComputeNode(this.value + value);
-        }
-
-        ComputeNode mul(Long value) {
-            return new ComputeNode(this.value * value);
-        }
-
-        ComputeNode concat(Long value) {
-            long length = (long) (Math.log10(value) + 1);
-            return new ComputeNode(this.value * (long) Math.pow(10, length) + value);
-        }
     }
 }
