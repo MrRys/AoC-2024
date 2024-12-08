@@ -4,6 +4,7 @@ out/
 !**/src/test/**/out/
 .idea
 AoC2024.iml
+inputs
 
 ### Eclipse ###
 .apt_generated
