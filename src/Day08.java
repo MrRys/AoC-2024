@@ -73,11 +73,7 @@ public class Day08 extends Day {
                 Location antennaLoc2 = antennaLocations.get(j);
                 Location difference = antennaLoc1.sub(antennaLoc2);
 
-                Location antinodeLocation = antennaLoc1.add(difference);
-                while (addAntinode(antinodes, antinodeLocation)) {
-                    antinodeLocation = antinodeLocation.add(difference);
-                }
-                antinodeLocation = antennaLoc1.sub(difference);
+                Location antinodeLocation = antennaLoc1.sub(difference);
                 while (addAntinode(antinodes, antinodeLocation)) {
                     antinodeLocation = antinodeLocation.sub(difference);
                 }
@@ -85,10 +81,6 @@ public class Day08 extends Day {
                 antinodeLocation = antennaLoc2.add(difference);
                 while (addAntinode(antinodes, antinodeLocation)) {
                     antinodeLocation = antinodeLocation.add(difference);
-                }
-                antinodeLocation = antennaLoc2.sub(difference);
-                while (addAntinode(antinodes, antinodeLocation)) {
-                    antinodeLocation = antinodeLocation.sub(difference);
                 }
             }
         }
