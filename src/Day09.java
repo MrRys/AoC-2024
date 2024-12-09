@@ -136,12 +136,5 @@ public class Day09 extends Day {
             this.id = id;
             this.size = size;
         }
-
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            String c = id < 0 ? "." : String.valueOf(id);
-            builder.append(size > 0 ? c.repeat(size) : "|");
-            return builder.toString();
-        }
     }
 }
