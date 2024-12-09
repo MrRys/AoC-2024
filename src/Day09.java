@@ -57,7 +57,7 @@ public class Day09 extends Day {
         List<Block> localBlocks = blocks.stream().map(Block::new).collect(Collectors.toList());
         int offset = localBlocks.size() % 2 == 1 ? 1 : 2;
 
-        for (int freeIdx = 1, fullIdx = localBlocks.size() - offset; freeIdx <= fullIdx; ) {
+        for (int freeIdx = 1, fullIdx = localBlocks.size() - offset; freeIdx < fullIdx; ) {
             Block fullBlock = localBlocks.get(fullIdx);
             Block freeBlock = localBlocks.get(freeIdx);
 
@@ -89,14 +89,14 @@ public class Day09 extends Day {
         List<Block> localBlocks = blocks.stream().map(Block::new).collect(Collectors.toList());
         int offset = localBlocks.size() % 2 == 1 ? 1 : 2;
 
-        for (int fullIdx = localBlocks.size() - offset; fullIdx >= 0; fullIdx--) {
+        for (int fullIdx = localBlocks.size() - offset; fullIdx > 1; fullIdx--) {
             Block fullBlock = localBlocks.get(fullIdx);
 
             if (fullBlock.id < 0) {
                 continue;
             }
 
-            for (int freeIdx = 1; freeIdx <= fullIdx; freeIdx++) {
+            for (int freeIdx = 1; freeIdx < fullIdx; freeIdx++) {
                 Block freeBlock = localBlocks.get(freeIdx);
 
                 if (freeBlock.id > 0) {
