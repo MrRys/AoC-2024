@@ -29,7 +29,6 @@ public class Day10 extends Day {
     }
 
     void parseInput() {
-        List<String> input = getInput();
         topologicalMap = getInput().stream()
                 .map(line -> Arrays.stream(line.split(""))
                         .map(Integer::parseInt).toArray(Integer[]::new))
