@@ -4,13 +4,11 @@ import java.util.*;
 public class Day10 extends Day {
 
     final static private String inputFile = "inputs/day10.txt";
-    private final Map<Location, Set<Location>> trailheadDestinations;
-    private final Map<Location, Integer> trailheadPaths;
-    private Integer[][] topologicalMap;
+    private final List<Location> trailheads;
+    private Byte[][] topologicalMap;
 
     public Day10() {
-        trailheadDestinations = new HashMap<>();
-        trailheadPaths = new HashMap<>();
+        trailheads = new ArrayList<>();
 
         try {
             readFile(inputFile);
@@ -31,14 +29,13 @@ public class Day10 extends Day {
     void parseInput() {
         topologicalMap = getInput().stream()
                 .map(line -> Arrays.stream(line.split(""))
-                        .map(Integer::parseInt).toArray(Integer[]::new))
-                .toArray(Integer[][]::new);
+                        .map(Byte::parseByte).toArray(Byte[]::new))
+                .toArray(Byte[][]::new);
 
         for (int i = 0; i < topologicalMap.length; i++) {
             for (int j = 0; j < topologicalMap[i].length; j++) {
                 if (topologicalMap[i][j] == 0) {
-                    trailheadDestinations.put(new Location(i, j), new HashSet<>());
-                    trailheadPaths.put(new Location(i, j), 0);
+                    trailheads.add(new Location(i, j));
                 }
             }
         }
@@ -58,27 +55,12 @@ public class Day10 extends Day {
                 || topologicalMap[currLocation.row][currLocation.col] != topologicalMap[nextLocation.row][nextLocation.col] - 1;
     }
 
-    private long countTrailheadPaths() {
-        long result = 0;
-        for (Integer score : trailheadPaths.values()) {
-            result += score;
-        }
-        return result;
-    }
-
-    private long countTrailheadDestinations() {
-        long result = 0;
-
-        for (Set<Location> trailheadDestination : trailheadDestinations.values()) {
-            result += trailheadDestination.size();
-        }
-        return result;
-    }
-
     public long part1() {
+        long result = 0;
         Stack<Location> stack = new Stack<>();
+        Set<Location> found = new HashSet<>();
 
-        for (Location trailhead : trailheadDestinations.keySet()) {
+        for (Location trailhead : trailheads) {
             stack.push(trailhead);
 
             while (!stack.empty()) {
@@ -92,8 +74,9 @@ public class Day10 extends Day {
                             continue;
                         }
 
-                        if (isHighestPoint(nextLocation)) {
-                            trailheadDestinations.get(trailhead).add(nextLocation);
+                        if (isHighestPoint(nextLocation) && !found.contains(nextLocation)) {
+                            result++;
+                            found.add(nextLocation);
                             continue;
                         }
 
@@ -101,15 +84,17 @@ public class Day10 extends Day {
                     }
                 }
             }
+            found.clear();
         }
 
-        return countTrailheadDestinations();
+        return result;
     }
 
     public long part2() {
+        long result = 0;
         Stack<Location> stack = new Stack<>();
 
-        for (Location trailhead : trailheadPaths.keySet()) {
+        for (Location trailhead : trailheads) {
             stack.push(trailhead);
 
             while (!stack.empty()) {
@@ -124,7 +109,7 @@ public class Day10 extends Day {
                         }
 
                         if (isHighestPoint(nextLocation)) {
-                            trailheadPaths.put(trailhead, trailheadPaths.get(trailhead) + 1);
+                            result++;
                             continue;
                         }
 
@@ -134,7 +119,7 @@ public class Day10 extends Day {
             }
         }
 
-        return countTrailheadPaths();
+        return result;
     }
 
     private static class Location {
