@@ -42,6 +42,10 @@ public class Day10 extends Day {
     }
 
     private boolean isHighestPoint(Location location) {
+        if (location.row < 0 || location.row >= topologicalMap.length
+                || location.col < 0 || location.col >= topologicalMap[0].length) {
+            return false;
+        }
         return topologicalMap[location.row][location.col] == 9;
     }
 
