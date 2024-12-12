@@ -35,7 +35,7 @@ public class Day11 extends Day {
         }
 
         State state = new State(stone, blinksLeft);
-        if (memory.containsKey(new State(stone, blinksLeft))) {
+        if (memory.containsKey(state)) {
             return memory.get(state);
         }
 
@@ -58,9 +58,7 @@ public class Day11 extends Day {
     public long part1() {
         long result = 0;
         for (long stone : stones) {
-            long count = countStones(stone, 25);
-            memory.put(new State(stone, 25), count);
-            result += count;
+            result += countStones(stone, 25);
         }
         return result;
     }
@@ -68,9 +66,7 @@ public class Day11 extends Day {
     public long part2() {
         long result = 0;
         for (long stone : stones) {
-            long count = countStones(stone, 75);
-            memory.put(new State(stone, 75), count);
-            result += count;
+            result += countStones(stone, 75);
         }
         return result;
     }
