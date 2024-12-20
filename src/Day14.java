@@ -40,12 +40,12 @@ public class Day14 extends Day {
 
     private long runSimulation(int time) {
         workRobots.forEach(robot -> robot.simulate(time));
-        long upLeft = workRobots.stream().filter(Robot::inFirstQuadrant).count();
-        long upRight = workRobots.stream().filter(Robot::inSecondQuadrant).count();
-        long downLeft = workRobots.stream().filter(Robot::inThirdQuadrant).count();
-        long downRight = workRobots.stream().filter(Robot::inFourthQuadrant).count();
+        long firstQuadrant = workRobots.stream().filter(Robot::inFirstQuadrant).count();
+        long secondQuadrant = workRobots.stream().filter(Robot::inSecondQuadrant).count();
+        long thirdQuadrant = workRobots.stream().filter(Robot::inThirdQuadrant).count();
+        long fourthQuadrant = workRobots.stream().filter(Robot::inFourthQuadrant).count();
 
-        return upLeft * upRight * downLeft * downRight;
+        return firstQuadrant * secondQuadrant * thirdQuadrant * fourthQuadrant;
     }
 
     private void resetRobots() {
