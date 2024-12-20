@@ -38,7 +38,7 @@ public class Day14 extends Day {
     }
 
     private long runSimulation(int time) {
-        List<Robot> robots = resetRobots();
+        List<Robot> robots = getRobots();
 
         robots.forEach(robot -> robot.simulate(time));
         long firstQuadrant = robots.stream().filter(Robot::inFirstQuadrant).count();
@@ -49,7 +49,7 @@ public class Day14 extends Day {
         return firstQuadrant * secondQuadrant * thirdQuadrant * fourthQuadrant;
     }
 
-    private List<Robot> resetRobots() {
+    private List<Robot> getRobots() {
         return initRobots.stream().map(Robot::new).toList();
     }
 
