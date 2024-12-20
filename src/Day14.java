@@ -81,7 +81,7 @@ public class Day14 extends Day {
         int velY;
 
         public Robot(List<Integer> parameters) {
-            if (parameters.size() != 4) {
+            if (parameters == null || parameters.size() != 4) {
                 throw new IllegalArgumentException();
             }
 
