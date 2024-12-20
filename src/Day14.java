@@ -7,10 +7,9 @@ public class Day14 extends Day {
 
     final static private String inputFile = "inputs/day14.txt";
 
-    private static final int sizeX = 101;
-    private static final int sizeY = 103;
+    private static final int gridSizeX = 101;
+    private static final int gridSizeY = 103;
     private List<Robot> initRobots;
-    private List<Robot> workRobots;
 
     public Day14() {
         initRobots = new ArrayList<>();
@@ -39,21 +38,22 @@ public class Day14 extends Day {
     }
 
     private long runSimulation(int time) {
-        workRobots.forEach(robot -> robot.simulate(time));
-        long firstQuadrant = workRobots.stream().filter(Robot::inFirstQuadrant).count();
-        long secondQuadrant = workRobots.stream().filter(Robot::inSecondQuadrant).count();
-        long thirdQuadrant = workRobots.stream().filter(Robot::inThirdQuadrant).count();
-        long fourthQuadrant = workRobots.stream().filter(Robot::inFourthQuadrant).count();
+        List<Robot> robots = resetRobots();
+
+        robots.forEach(robot -> robot.simulate(time));
+        long firstQuadrant = robots.stream().filter(Robot::inFirstQuadrant).count();
+        long secondQuadrant = robots.stream().filter(Robot::inSecondQuadrant).count();
+        long thirdQuadrant = robots.stream().filter(Robot::inThirdQuadrant).count();
+        long fourthQuadrant = robots.stream().filter(Robot::inFourthQuadrant).count();
 
         return firstQuadrant * secondQuadrant * thirdQuadrant * fourthQuadrant;
     }
 
-    private void resetRobots() {
-        workRobots = initRobots.stream().map(Robot::new).toList();
+    private List<Robot> resetRobots() {
+        return initRobots.stream().map(Robot::new).toList();
     }
 
     public long part1() {
-        resetRobots();
         return runSimulation(100);
     }
 
@@ -61,9 +61,7 @@ public class Day14 extends Day {
         long result = 0;
 
         long minSafety = Long.MAX_VALUE;
-        for (int time = 0; time < sizeX * sizeY; time++) {
-            resetRobots();
-
+        for (int time = 0; time < gridSizeX * gridSizeY; time++) {
             long safety = runSimulation(time);
             if (safety < minSafety) {
                 minSafety = safety;
@@ -99,26 +97,26 @@ public class Day14 extends Day {
         }
 
         public void simulate(int time) {
-            posX = (posX + velX * time) % sizeX;
-            posY = (posY + velY * time) % sizeY;
-            posX = posX >= 0 ? posX : posX + sizeX;
-            posY = posY >= 0 ? posY : posY + sizeY;
+            posX = (posX + velX * time) % gridSizeX;
+            posY = (posY + velY * time) % gridSizeY;
+            posX = posX >= 0 ? posX : posX + gridSizeX;
+            posY = posY >= 0 ? posY : posY + gridSizeY;
         }
 
         public boolean inFirstQuadrant() {
-            return posX < sizeX / 2 && posY < sizeY / 2;
+            return posX < gridSizeX / 2 && posY < gridSizeY / 2;
         }
 
         public boolean inSecondQuadrant() {
-            return posX > sizeX / 2 && posY < sizeY / 2;
+            return posX > gridSizeX / 2 && posY < gridSizeY / 2;
         }
 
         public boolean inThirdQuadrant() {
-            return posX < sizeX / 2 && posY > sizeY / 2;
+            return posX < gridSizeX / 2 && posY > gridSizeY / 2;
         }
 
         public boolean inFourthQuadrant() {
-            return posX > sizeX / 2 && posY > sizeY / 2;
+            return posX > gridSizeX / 2 && posY > gridSizeY / 2;
         }
 
         public String toString() {
