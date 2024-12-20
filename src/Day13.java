@@ -80,9 +80,8 @@ public class Day13 extends Day {
             this.yAxis = yAxis;
         }
 
-        public void add(double d) {
-            xAxis += d;
-            yAxis += d;
+        public Pair add(Pair other) {
+            return new Pair(xAxis + other.xAxis, yAxis + other.yAxis);
         }
 
         public String toString() {
@@ -93,11 +92,11 @@ public class Day13 extends Day {
     private record ClawMachine(Pair buttonA, Pair buttonB, Pair prize) {
 
         public long getPrice(double prizeOffset) {
-            prize.add(prizeOffset);
+            Pair newPrize = prize.add(new Pair(prizeOffset, prizeOffset));
 
-            double buttonAPresses = (prize.xAxis * buttonB.yAxis - prize.yAxis * buttonB.xAxis) /
+            double buttonAPresses = (newPrize.xAxis * buttonB.yAxis - newPrize.yAxis * buttonB.xAxis) /
                     (buttonA.xAxis * buttonB.yAxis - buttonA.yAxis * buttonB.xAxis);
-            double buttonBPresses = (prize.xAxis - buttonA.xAxis * buttonAPresses) /
+            double buttonBPresses = (newPrize.xAxis - buttonA.xAxis * buttonAPresses) /
                     buttonB.xAxis;
             return buttonAPresses % 1 == 0 && buttonBPresses % 1 == 0 ? (long) (buttonAPresses * 3 + buttonBPresses) : 0;
         }
