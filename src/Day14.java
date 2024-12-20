@@ -24,8 +24,8 @@ public class Day14 extends Day {
     }
 
     public static void main(String[] args) {
-        double time = System.currentTimeMillis();
         Day14 solution = new Day14();
+        double time = System.currentTimeMillis();
         System.out.println("Part 1: " + solution.part1());
         System.out.println("Part 2: " + solution.part2());
         System.out.println("Time: " + (System.currentTimeMillis() - time) / 1000 + "s");
@@ -39,11 +39,11 @@ public class Day14 extends Day {
     }
 
     private long runSimulation(int time) {
-        workRobots.stream().parallel().forEach(robot -> robot.simulate(time));
-        long upLeft = workRobots.stream().parallel().filter(Robot::inUpLeft).count();
-        long upRight = workRobots.stream().parallel().filter(Robot::inUpRight).count();
-        long downLeft = workRobots.stream().parallel().filter(Robot::inDownLeft).count();
-        long downRight = workRobots.stream().parallel().filter(Robot::inDownRight).count();
+        workRobots.forEach(robot -> robot.simulate(time));
+        long upLeft = workRobots.stream().filter(Robot::inFirstQuadrant).count();
+        long upRight = workRobots.stream().filter(Robot::inSecondQuadrant).count();
+        long downLeft = workRobots.stream().filter(Robot::inThirdQuadrant).count();
+        long downRight = workRobots.stream().filter(Robot::inFourthQuadrant).count();
 
         return upLeft * upRight * downLeft * downRight;
     }
@@ -105,19 +105,19 @@ public class Day14 extends Day {
             posY = posY >= 0 ? posY : posY + sizeY;
         }
 
-        public boolean inUpLeft() {
+        public boolean inFirstQuadrant() {
             return posX < sizeX / 2 && posY < sizeY / 2;
         }
 
-        public boolean inUpRight() {
+        public boolean inSecondQuadrant() {
             return posX > sizeX / 2 && posY < sizeY / 2;
         }
 
-        public boolean inDownLeft() {
+        public boolean inThirdQuadrant() {
             return posX < sizeX / 2 && posY > sizeY / 2;
         }
 
-        public boolean inDownRight() {
+        public boolean inFourthQuadrant() {
             return posX > sizeX / 2 && posY > sizeY / 2;
         }
 
