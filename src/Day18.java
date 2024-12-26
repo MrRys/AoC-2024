@@ -100,15 +100,27 @@ public class Day18 extends Day {
     }
 
     public long part2() {
-        for (int byteCount = 1025; byteCount < bytes.size(); byteCount++) {
+        int startIdx = 1025;
+        int endIdx = bytes.size() - 1;
+        int breakingByteIdx = -1;
+
+        while (startIdx < endIdx) {
+            int byteCount = startIdx + (endIdx - startIdx) / 2;
             workingGrid = generateGrid(byteCount);
             if (findShortestPathLength() < 0) {
-                Position breakingByte = bytes.get(byteCount - 1);
-                System.out.println(breakingByte.col + "," + breakingByte.row);
-                return byteCount - 1;
+                endIdx = byteCount;
+                breakingByteIdx = byteCount - 1;
+            } else {
+                startIdx = byteCount + 1;
             }
         }
-        return -1;
+
+        if (breakingByteIdx >= 0) {
+            Position breakingByte = bytes.get(breakingByteIdx);
+            System.out.println(breakingByte.col + "," + breakingByte.row);
+        }
+
+        return breakingByteIdx;
     }
 
     private static class Position {
