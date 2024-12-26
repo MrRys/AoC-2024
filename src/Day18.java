@@ -100,7 +100,7 @@ public class Day18 extends Day {
     }
 
     public long part2() {
-        for (int byteCount = 1024; byteCount < bytes.size(); byteCount++) {
+        for (int byteCount = 1025; byteCount < bytes.size(); byteCount++) {
             workingGrid = generateGrid(byteCount);
             if (findShortestPathLength() < 0) {
                 Position breakingByte = bytes.get(byteCount - 1);
@@ -211,12 +211,12 @@ public class Day18 extends Day {
             return workingGrid != null && position.col + 1 < gridSize && workingGrid[position.row][position.col + 1] != '#';
         }
 
-        public long gScore() {
-            return pathLength;
-        }
-
         public boolean isEnd() {
             return position.equals(endPosition);
+        }
+
+        public long gScore() {
+            return pathLength;
         }
 
         public String toString() {
