@@ -55,24 +55,14 @@ public class Day19 extends Day {
     }
 
     public long part1() {
-        long result = 0;
-        for (String design : designs) {
-            result += checkPossibleDesign(design) > 0 ? 1 : 0;
-        }
-        return result;
+        return designs.stream().mapToLong(design -> checkPossibleDesign(design) > 0 ? 1 : 0).sum();
     }
 
     public long part2() {
-        long result = 0;
-        for (String design : designs) {
-            result += checkPossibleDesign(design);
-        }
-        return result;
+        return designs.stream().mapToLong(this::checkPossibleDesign).sum();
     }
 
     private static class TowelTrieNode {
-        private static final Map<String, List<Integer>> possibleTowelLengths = new HashMap<>();
-
         private final int colorsCount = 5;
         private final TowelTrieNode[] colors;
         private final int depth;
@@ -97,24 +87,12 @@ public class Day19 extends Day {
                 for (char color : towel.toCharArray()) {
                     current = current.addColor(color);
                 }
-                current.setIsEnd();
+                current.isEnd = true;
             }
             return root;
         }
 
-        public TowelTrieNode addColor(char color) {
-            int colorCode = getColorCode(color);
-            if (colors[colorCode] == null) {
-                colors[colorCode] = new TowelTrieNode(depth + 1);
-            }
-            return colors[colorCode];
-        }
-
         public List<Integer> findAllPossibleTowels(String design) {
-            if (possibleTowelLengths.containsKey(design)) {
-                return possibleTowelLengths.get(design);
-            }
-
             List<Integer> towelLengths = new ArrayList<>();
             TowelTrieNode current = this;
             for (char color : design.toCharArray()) {
@@ -122,21 +100,19 @@ public class Day19 extends Day {
                 if (current == null) {
                     break;
                 }
-                if (current.isEnd()) {
+                if (current.isEnd) {
                     towelLengths.add(current.depth);
                 }
             }
-
-            possibleTowelLengths.put(design, towelLengths);
             return towelLengths;
         }
 
-        private boolean isEnd() {
-            return isEnd;
-        }
-
-        private void setIsEnd() {
-            this.isEnd = true;
+        private TowelTrieNode addColor(char color) {
+            int colorCode = getColorCode(color);
+            if (colors[colorCode] == null) {
+                colors[colorCode] = new TowelTrieNode(depth + 1);
+            }
+            return colors[colorCode];
         }
 
         private int getColorCode(char color) {
