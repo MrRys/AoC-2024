@@ -79,8 +79,8 @@ public class Day20 extends Day {
         }
 
         long cheatCount = 0;
-        for (int pathIndex1 = 0; pathIndex1 < path.size() - 1; pathIndex1++) {
-            for (int pathIndex2 = pathIndex1 + 1; pathIndex2 < path.size(); pathIndex2++) {
+        for (int pathIndex1 = 0; pathIndex1 < path.size() - timeSaveMinimum; pathIndex1++) {
+            for (int pathIndex2 = pathIndex1 + timeSaveMinimum; pathIndex2 < path.size(); pathIndex2++) {
                 int distance = distance(path.get(pathIndex1), path.get(pathIndex2));
                 if (distance > skipLimit) {
                     continue;
