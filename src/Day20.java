@@ -1,5 +1,7 @@
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class Day20 extends Day {
 
@@ -7,9 +9,7 @@ public class Day20 extends Day {
 
     private char[][] grid;
     private Position startPosition;
-    private Position endPosition;
-    private List<Position> breakableWalls;
-    private long defaultShortestPathLength = 0;
+    private List<Position> path;
 
     public Day20() {
         try {
@@ -30,126 +30,75 @@ public class Day20 extends Day {
 
     void parseInput() {
         grid = getInput().stream().map(String::toCharArray).toArray(char[][]::new);
-        breakableWalls = new ArrayList<>();
+
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[row].length; col++) {
-                switch (grid[row][col]) {
-                    case 'S' -> startPosition = new Position(row, col);
-                    case 'E' -> endPosition = new Position(row, col);
-                    case '#' -> {
-                        if (isBreakableWall(row, col)) {
-                            breakableWalls.add(new Position(row, col));
-                        }
+                if (grid[row][col] == 'S') {
+                    startPosition = new Position(row, col);
+                    break;
+                }
+            }
+        }
+    }
+
+    private List<Position> findPath() {
+        List<Position> path = new ArrayList<>();
+
+        Position currentPosition = startPosition;
+        while (grid[currentPosition.row][currentPosition.col] != 'E') {
+            path.add(currentPosition);
+            for (int dRow = -1; dRow <= 1; dRow++) {
+                for (int dCol = -1; dCol <= 1; dCol++) {
+                    Position newPosition = new Position(currentPosition.row + dRow, currentPosition.col + dCol);
+                    if (newPosition.row < 0 || newPosition.row >= grid.length ||
+                            newPosition.col < 0 || newPosition.col >= grid[0].length ||
+                            dRow == dCol || dRow == -dCol ||
+                            grid[newPosition.row][newPosition.col] == '#' ||
+                            path.size() > 1 && path.get(path.size() - 2).equals(newPosition)) {
+                        continue;
                     }
+
+                    currentPosition = newPosition;
+                    dRow = 2;
+                    break;
                 }
             }
         }
+        path.add(currentPosition);
+
+        return path;
     }
 
-    private boolean isBreakableWall(int row, int col) {
-        return upEmpty(row, col) && downEmpty(row, col) && !leftEmpty(row, col) && !rightEmpty(row, col) ||
-                !upEmpty(row, col) && !downEmpty(row, col) && leftEmpty(row, col) && rightEmpty(row, col) ||
-                upEmpty(row, col) && !downEmpty(row, col) && leftEmpty(row, col) && rightEmpty(row, col) ||
-                !upEmpty(row, col) && downEmpty(row, col) && leftEmpty(row, col) && rightEmpty(row, col) ||
-                upEmpty(row, col) && downEmpty(row, col) && !leftEmpty(row, col) && rightEmpty(row, col) ||
-                upEmpty(row, col) && downEmpty(row, col) && leftEmpty(row, col) && !rightEmpty(row, col) ||
-                upEmpty(row, col) && leftEmpty(row, col) && !upLeftEmpty(row, col) ||
-                upEmpty(row, col) && rightEmpty(row, col) && !upRightEmpty(row, col);
+    private int distance(Position p1, Position p2) {
+        return Math.abs(p1.row - p2.row) + Math.abs(p1.col - p2.col);
     }
 
-    private boolean upEmpty(int row, int col) {
-        return row - 1 >= 0 && grid[row - 1][col] != '#';
-    }
+    private long findAllCheats(int skipLimit, int timeSaveMinimum) {
+        if (path == null) {
+            path = findPath();
+        }
 
-    private boolean downEmpty(int row, int col) {
-        return row + 1 < grid.length && grid[row + 1][col] != '#';
-    }
-
-    private boolean leftEmpty(int row, int col) {
-        return col - 1 >= 0 && grid[row][col - 1] != '#';
-    }
-
-    private boolean rightEmpty(int row, int col) {
-        return col + 1 < grid[0].length && grid[row][col + 1] != '#';
-    }
-
-    private boolean upLeftEmpty(int row, int col) {
-        return row - 1 >= 0 && col - 1 >= 0 && grid[row - 1][col - 1] != '#';
-    }
-
-    private boolean upRightEmpty(int row, int col) {
-        return row - 1 >= 0 && col + 1 < grid[0].length && grid[row - 1][col + 1] != '#';
-    }
-
-    private long findShortestPathLength() {
-        Queue<Node> queue = new LinkedList<>();
-        Set<Position> visited = new HashSet<>();
-
-        Node startNode = new Node(startPosition);
-        queue.add(startNode);
-        visited.add(startNode.position);
-
-        while (!queue.isEmpty()) {
-            Node currentNode = queue.poll();
-
-            if (currentNode.isEnd()) {
-                return currentNode.gScore();
-            }
-
-            if (currentNode.canMoveUp()) {
-                Node newNode = currentNode.moveUp();
-                if (!visited.contains(newNode.position)) {
-                    visited.add(newNode.position);
-                    queue.add(newNode);
+        long cheatCount = 0;
+        for (int pathIndex1 = 0; pathIndex1 < path.size() - 1; pathIndex1++) {
+            for (int pathIndex2 = pathIndex1 + 1; pathIndex2 < path.size(); pathIndex2++) {
+                int distance = distance(path.get(pathIndex1), path.get(pathIndex2));
+                if (distance > skipLimit) {
+                    continue;
                 }
-            }
-
-            if (currentNode.canMoveDown()) {
-                Node newNode = currentNode.moveDown();
-                if (!visited.contains(newNode.position)) {
-                    visited.add(newNode.position);
-                    queue.add(newNode);
-                }
-            }
-
-            if (currentNode.canMoveLeft()) {
-                Node newNode = currentNode.moveLeft();
-                if (!visited.contains(newNode.position)) {
-                    visited.add(newNode.position);
-                    queue.add(newNode);
-                }
-            }
-
-            if (currentNode.canMoveRight()) {
-                Node newNode = currentNode.moveRight();
-                if (!visited.contains(newNode.position)) {
-                    visited.add(newNode.position);
-                    queue.add(newNode);
+                if (pathIndex2 - pathIndex1 >= timeSaveMinimum + distance) {
+                    cheatCount++;
                 }
             }
         }
-
-        return -1;
+        return cheatCount;
     }
 
     public long part1() {
-        if (defaultShortestPathLength == 0) {
-            defaultShortestPathLength = findShortestPathLength();
-        }
-
-        long result = 0;
-        for (Position breakableWall : breakableWalls) {
-            grid[breakableWall.row][breakableWall.col] = '.';
-            if (defaultShortestPathLength - findShortestPathLength() >= 100) {
-                result++;
-            }
-            grid[breakableWall.row][breakableWall.col] = '#';
-        }
-        return result;
+        return findAllCheats(2, 100);
     }
 
     public long part2() {
-        return 0;
+        return findAllCheats(20, 100);
     }
 
     private static class Position {
@@ -159,11 +108,6 @@ public class Day20 extends Day {
         public Position(int row, int col) {
             this.row = row;
             this.col = col;
-        }
-
-        public Position(Position other) {
-            this.row = other.row;
-            this.col = other.col;
         }
 
         @Override
@@ -186,77 +130,6 @@ public class Day20 extends Day {
 
         public String toString() {
             return "(" + row + ", " + col + ")";
-        }
-    }
-
-    private class Node {
-        Position position;
-        long pathLength;
-
-        public Node(Position position) {
-            this.position = position;
-            this.pathLength = 0;
-        }
-
-        public Node(Node other) {
-            this.position = new Position(other.position);
-            this.pathLength = other.pathLength;
-        }
-
-        public Node moveUp() {
-            Node newNode = new Node(this);
-            newNode.position.row--;
-            newNode.pathLength++;
-            return newNode;
-        }
-
-        public Node moveDown() {
-            Node newNode = new Node(this);
-            newNode.position.row++;
-            newNode.pathLength++;
-            return newNode;
-        }
-
-        public Node moveLeft() {
-            Node newNode = new Node(this);
-            newNode.position.col--;
-            newNode.pathLength++;
-            return newNode;
-        }
-
-        public Node moveRight() {
-            Node newNode = new Node(this);
-            newNode.position.col++;
-            newNode.pathLength++;
-            return newNode;
-        }
-
-        public boolean canMoveUp() {
-            return position.row - 1 >= 0 && grid[position.row - 1][position.col] != '#';
-        }
-
-        public boolean canMoveDown() {
-            return position.row + 1 < grid.length && grid[position.row + 1][position.col] != '#';
-        }
-
-        public boolean canMoveLeft() {
-            return position.col - 1 >= 0 && grid[position.row][position.col - 1] != '#';
-        }
-
-        public boolean canMoveRight() {
-            return position.col + 1 < grid[0].length && grid[position.row][position.col + 1] != '#';
-        }
-
-        public boolean isEnd() {
-            return position.equals(endPosition);
-        }
-
-        public long gScore() {
-            return pathLength;
-        }
-
-        public String toString() {
-            return "{" + position + ", " + pathLength + "}";
         }
     }
 }
